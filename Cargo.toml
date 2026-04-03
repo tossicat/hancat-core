@@ -1,0 +1,21 @@
+[package]
+name = "hancat-core"
+version = "0.1.0"
+edition = "2021"
+authors = ["TossiCat"]
+description = "tossicat-core(조사)와 yongcat(용언 활용)을 통합하는 한국어 텍스트 처리 라이브러리"
+license = "MIT"
+repository = "https://github.com/tossicat/hancat-core"
+keywords = ["korean", "nlp", "conjugation", "postposition"]
+categories = ["text-processing", "localization"]
+
+[dependencies]
+tossicat = { version = "0.8", optional = true }
+yongcat = { git = "https://github.com/tossicat/yongcat", optional = true }
+
+[features]
+default = ["tossi", "yongeon"]
+tossi = ["dep:tossicat"]
+yongeon = ["dep:yongcat"]
+grade-a = ["yongeon", "yongcat/grade-a"]
+grade-b = ["yongeon", "yongcat/grade-b"]
