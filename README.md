@@ -28,7 +28,7 @@ assert_eq!(result, "여기서 쉬세요.");
 
 - 접사가 어미이고 단어가 용언 사전에 있으면 yongcat으로 활용형을 생성합니다.
 - 그 외에는 tossicat-core로 조사를 처리합니다.
-- 처리 실패 시 에러 코드(`{E01}`~`{E11}`)를 해당 위치에 삽입하고, 나머지는 정상 처리합니다.
+- 처리 실패 시 에러 코드(`{E01}`~`{E12}`)를 해당 위치에 삽입하고, 나머지는 정상 처리합니다.
 
 ## 에러 코드
 
@@ -74,7 +74,7 @@ hancat-core = { version = "0.1", features = ["grade-b"], default-features = fals
 
 ## 의존성
 
-- [tossicat-core](https://github.com/tossicat/tossicat-core) - 한국어 조사 처리 (138개 조사)
+- [tossicat-core](https://github.com/tossicat/tossicat-core) - 한국어 조사 처리 (205개 조사)
 - [yongcat](https://github.com/tossicat/yongcat) - 한국어 용언 활용 (1,721개 용언, 42개 어미)
 
 ## 라이선스
