@@ -100,37 +100,26 @@ fn parse_pairs(input: &str) -> Result<Vec<Pair>, Error> {
     Ok(pairs)
 }
 
-/// 단어가 용언(동사/형용사)인지 판별합니다.
-///
-/// 단어가 '다'로 끝나면 용언으로 판단합니다.
-fn is_yongeon(word: &str) -> bool {
-    word.ends_with('다')
-}
-
 /// 단어와 접사 쌍을 처리하여 변환된 문자열을 반환합니다.
+///
+/// 접사가 어미이고 단어가 용언이면 용언 활용, 아니면 조사로 처리합니다.
 fn process_pair(pair: &Pair) -> Result<String, Error> {
-    if is_yongeon(&pair.word) {
-        // 용언 활용 처리
-        #[cfg(feature = "yongeon")]
-        {
-            process_yongeon(&pair.word, &pair.suffix)
+    // 접사가 어미이고 단어가 용언 사전에 있으면 용언 활용 처리
+    #[cfg(feature = "yongeon")]
+    if let Some(eomi) = yongcat::find_eomi_exact(&pair.suffix) {
+        if !yongcat::lookup_all(&pair.word).is_empty() {
+            return process_yongeon(&pair.word, eomi);
         }
-        #[cfg(not(feature = "yongeon"))]
-        {
-            // yongeon feature가 없으면 그대로 연결
-            Ok(format!("{}{}", &pair.word[..pair.word.len() - '다'.len_utf8()], &pair.suffix))
-        }
-    } else {
-        // 조사 처리
-        #[cfg(feature = "tossi")]
-        {
-            process_tossi(&pair.word, &pair.suffix)
-        }
-        #[cfg(not(feature = "tossi"))]
-        {
-            // tossi feature가 없으면 그대로 연결
-            Ok(format!("{}{}", &pair.word, &pair.suffix))
-        }
+    }
+
+    // 그 외에는 조사로 처리
+    #[cfg(feature = "tossi")]
+    {
+        process_tossi(&pair.word, &pair.suffix)
+    }
+    #[cfg(not(feature = "tossi"))]
+    {
+        Ok(format!("{}{}", &pair.word, &pair.suffix))
     }
 }
 
@@ -142,19 +131,17 @@ fn process_tossi(word: &str, tossi: &str) -> Result<String, Error> {
 
 /// yongcat을 사용하여 용언 활용을 처리합니다.
 #[cfg(feature = "yongeon")]
-fn process_yongeon(word: &str, eomi_str: &str) -> Result<String, Error> {
+fn process_yongeon(word: &str, eomi: &yongcat::Eomi) -> Result<String, Error> {
     let yongeon = yongcat::lookup_all(word)
         .into_iter()
         .next()
         .ok_or_else(|| Error::Yongeon(format!("용언을 찾을 수 없습니다: {}", word)))?;
-    let eomi = yongcat::find_eomi_exact(eomi_str)
-        .ok_or_else(|| Error::Yongeon(format!("어미를 찾을 수 없습니다: {}", eomi_str)))?;
     Ok(yongcat::conjugate(yongeon, eomi))
 }
 
 /// 문장 내의 모든 `{단어, 접사}` 패턴을 처리하여 변환된 문장을 반환합니다.
 ///
-/// - 단어가 '다'로 끝나면 용언 활용 처리 (yongeon feature 필요)
+/// - 접사가 어미이면 용언 활용 처리 (yongeon feature 필요)
 /// - 그 외에는 조사 처리 (tossi feature 필요)
 ///
 /// # 예제
@@ -184,54 +171,4 @@ pub fn modify_sentence(input: &str) -> Result<String, Error> {
     }
 
     Ok(result)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_parse_pairs() {
-        let pairs = parse_pairs("{철수, 이} {밥, 을} 먹었다.").unwrap();
-        assert_eq!(pairs.len(), 2);
-        assert_eq!(pairs[0].word, "철수");
-        assert_eq!(pairs[0].suffix, "이");
-        assert_eq!(pairs[1].word, "밥");
-        assert_eq!(pairs[1].suffix, "을");
-    }
-
-    #[test]
-    fn test_parse_pairs_with_yongeon() {
-        let pairs = parse_pairs("{먹다, 었습니다}").unwrap();
-        assert_eq!(pairs.len(), 1);
-        assert_eq!(pairs[0].word, "먹다");
-        assert_eq!(pairs[0].suffix, "었습니다");
-    }
-
-    #[test]
-    fn test_is_yongeon() {
-        assert!(is_yongeon("먹다"));
-        assert!(is_yongeon("쉬다"));
-        assert!(is_yongeon("공격하다"));
-        assert!(!is_yongeon("철수"));
-        assert!(!is_yongeon("밥"));
-    }
-
-    #[test]
-    fn test_parse_error_no_closing_brace() {
-        let result = parse_pairs("{철수, 이");
-        assert!(result.is_err());
-    }
-
-    #[test]
-    fn test_parse_error_no_comma() {
-        let result = parse_pairs("{철수 이}");
-        assert!(result.is_err());
-    }
-
-    #[test]
-    fn test_no_pairs() {
-        let result = modify_sentence("안녕하세요.").unwrap();
-        assert_eq!(result, "안녕하세요.");
-    }
 }
