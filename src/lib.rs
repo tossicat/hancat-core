@@ -20,7 +20,10 @@
 fn process_pair(word: &str, suffix: &str) -> Result<String, &'static str> {
     // 접사가 어미이고 단어가 용언 사전에 있으면 용언 활용 처리
     #[cfg(feature = "yongeon")]
-    if let Some(eomi) = yongcat::find_eomi_exact(suffix) {
+    let found_eomi = yongcat::find_eomi_exact(suffix);
+
+    #[cfg(feature = "yongeon")]
+    if let Some(eomi) = found_eomi {
         if let Some(yongeon) = yongcat::lookup_all(word).into_iter().next() {
             return Ok(yongcat::conjugate(yongeon, eomi));
         }
@@ -29,7 +32,24 @@ fn process_pair(word: &str, suffix: &str) -> Result<String, &'static str> {
     // 그 외에는 조사로 처리
     #[cfg(feature = "tossi")]
     {
-        tossicat::postfix(word, suffix).map_err(|_| "E11")
+        match tossicat::postfix(word, suffix) {
+            Ok(result) => Ok(result),
+            Err(_) => {
+                #[cfg(feature = "yongeon")]
+                {
+                    // 어미는 맞지만 용언 사전에 없음
+                    if found_eomi.is_some() {
+                        return Err("E10");
+                    }
+                    // 단어가 용언인데 어미가 없음
+                    if !yongcat::lookup_all(word).is_empty() {
+                        return Err("E11");
+                    }
+                }
+                // 토시 미존재
+                Err("E12")
+            }
+        }
     }
     #[cfg(not(feature = "tossi"))]
     {
@@ -41,7 +61,7 @@ fn process_pair(word: &str, suffix: &str) -> Result<String, &'static str> {
 ///
 /// - 접사가 어미이면 용언 활용 처리 (yongeon feature 필요)
 /// - 그 외에는 조사 처리 (tossi feature 필요)
-/// - 처리 실패 시 에러 코드(`{E01}`~`{E11}`)를 해당 위치에 삽입합니다.
+/// - 처리 실패 시 에러 코드(`{E01}`~`{E12}`)를 해당 위치에 삽입합니다.
 ///
 /// # 예제
 ///

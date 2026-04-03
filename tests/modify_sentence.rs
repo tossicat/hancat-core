@@ -65,9 +65,24 @@ fn 빈_접사_e04() {
 // 처리 에러 테스트
 
 #[test]
-fn 잘못된_조사_e11() {
-    let result = modify_sentence("{철수, 잘못된조사}");
+fn 용언_미존재_e10() {
+    // 어미("세요")는 맞지만 용언 사전에 없는 단어
+    let result = modify_sentence("{없는용언다, 세요}");
+    assert_eq!(result, "{E10}");
+}
+
+#[test]
+fn 어미_미존재_e11() {
+    // 단어("먹다")는 용언이지만 어미가 없음
+    let result = modify_sentence("{먹다, 잘못된어미}");
     assert_eq!(result, "{E11}");
+}
+
+#[test]
+fn 토시_미존재_e12() {
+    // 단어도 용언이 아니고 토시도 아님
+    let result = modify_sentence("{철수, 잘못된조사}");
+    assert_eq!(result, "{E12}");
 }
 
 // 에러가 있어도 나머지는 정상 처리
