@@ -7,18 +7,18 @@
 ## 사용 예
 
 ```rust
-use hancat_core::modify_sentence;
+use hancat_core::modify;
 
 // 조사 + 용언 통합 처리
-let result = modify_sentence("{철수, 이} {밥, 을} {먹다, 었습니다}.");
+let result = modify("{철수, 이} {밥, 을} {먹다, 었습니다}.");
 assert_eq!(result, "철수가 밥을 먹었습니다.");
 
 // 게임 전투 로그
-let result = modify_sentence("{플레이어, 이} {몬스터, 을} {공격하다, 었습니다}.");
+let result = modify("{플레이어, 이} {몬스터, 을} {공격하다, 었습니다}.");
 assert_eq!(result, "플레이어가 몬스터를 공격했습니다.");
 
 // NPC 대사
-let result = modify_sentence("여기서 {쉬다, 세요}.");
+let result = modify("여기서 {쉬다, 세요}.");
 assert_eq!(result, "여기서 쉬세요.");
 ```
 

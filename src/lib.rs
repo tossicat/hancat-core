@@ -7,9 +7,9 @@
 //! ## 사용 예
 //!
 //! ```rust
-//! use hancat_core::modify_sentence;
+//! use hancat_core::modify;
 //!
-//! let result = modify_sentence("{철수, 이} {밥, 을} {먹다, 었습니다}.");
+//! let result = modify("{철수, 이} {밥, 을} {먹다, 었습니다}.");
 //! assert_eq!(result, "철수가 밥을 먹었습니다.");
 //! ```
 
@@ -66,25 +66,25 @@ fn process_pair(word: &str, suffix: &str) -> Result<String, &'static str> {
 /// # 예제
 ///
 /// ```rust
-/// use hancat_core::modify_sentence;
+/// use hancat_core::modify;
 ///
 /// // 조사 + 용언 통합 처리
-/// let result = modify_sentence("{철수, 이} {밥, 을} {먹다, 었습니다}.");
+/// let result = modify("{철수, 이} {밥, 을} {먹다, 었습니다}.");
 /// assert_eq!(result, "철수가 밥을 먹었습니다.");
 ///
 /// // 조사만 처리
-/// let result = modify_sentence("{철수, 이} 왔다.");
+/// let result = modify("{철수, 이} 왔다.");
 /// assert_eq!(result, "철수가 왔다.");
 ///
 /// // 용언만 처리
-/// let result = modify_sentence("여기서 {쉬다, 세요}.");
+/// let result = modify("여기서 {쉬다, 세요}.");
 /// assert_eq!(result, "여기서 쉬세요.");
 ///
 /// // 파싱 에러 시 에러 코드 반환
-/// let result = modify_sentence("{철수 이}");
+/// let result = modify("{철수 이}");
 /// assert_eq!(result, "{E02}");
 /// ```
-pub fn modify_sentence(input: &str) -> String {
+pub fn modify(input: &str) -> String {
     let mut result = String::new();
     let mut chars = input.char_indices();
     let mut last_end = 0;
