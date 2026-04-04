@@ -1,8 +1,8 @@
 //! # hancat-core
 //!
-//! tossicat-core(조사)와 yongcat(용언 활용)을 통합하는 한국어 텍스트 처리 라이브러리.
+//! tossicat-core(토시(조사))와 yongcat(용언 활용)을 통합하는 한국어 텍스트 처리 라이브러리.
 //!
-//! `{단어, 접사}` 형태의 템플릿을 파싱하여, 조사와 용언 활용을 자동으로 처리합니다.
+//! `{단어, 접사}` 형태의 템플릿을 파싱하여, 토시(조사)와 용언 활용을 자동으로 처리합니다.
 //!
 //! ## 사용 예
 //!
@@ -15,7 +15,7 @@
 
 /// 단어와 접사 쌍을 처리하여 변환된 문자열을 반환합니다.
 ///
-/// 접사가 어미이고 단어가 용언이면 용언 활용, 아니면 조사로 처리합니다.
+/// 접사가 어미이고 단어가 용언이면 용언 활용, 아니면 토시(조사)로 처리합니다.
 /// 실패 시 에러 코드를 반환합니다.
 fn process_pair(word: &str, suffix: &str) -> Result<String, &'static str> {
     // 접사가 어미이고 단어가 용언 사전에 있으면 용언 활용 처리
@@ -29,7 +29,7 @@ fn process_pair(word: &str, suffix: &str) -> Result<String, &'static str> {
         }
     }
 
-    // 그 외에는 조사로 처리
+    // 그 외에는 토시(조사)로 처리
     #[cfg(feature = "tossi")]
     {
         match tossicat::postfix(word, suffix) {
@@ -46,7 +46,7 @@ fn process_pair(word: &str, suffix: &str) -> Result<String, &'static str> {
                         return Err("E11");
                     }
                 }
-                // 토시 미존재
+                // 토시(조사) 미존재
                 Err("E12")
             }
         }
@@ -60,7 +60,7 @@ fn process_pair(word: &str, suffix: &str) -> Result<String, &'static str> {
 /// 문장 내의 모든 `{단어, 접사}` 패턴을 처리하여 변환된 문장을 반환합니다.
 ///
 /// - 접사가 어미이면 용언 활용 처리 (yongeon feature 필요)
-/// - 그 외에는 조사 처리 (tossi feature 필요)
+/// - 그 외에는 토시(조사) 처리 (tossi feature 필요)
 /// - 처리 실패 시 에러 코드(`{E01}`~`{E12}`)를 해당 위치에 삽입합니다.
 ///
 /// # 예제
@@ -68,11 +68,11 @@ fn process_pair(word: &str, suffix: &str) -> Result<String, &'static str> {
 /// ```rust
 /// use hancat_core::modify;
 ///
-/// // 조사 + 용언 통합 처리
+/// // 토시(조사) + 용언 통합 처리
 /// let result = modify("{철수, 이} {밥, 을} {먹다, 었습니다}.");
 /// assert_eq!(result, "철수가 밥을 먹었습니다.");
 ///
-/// // 조사만 처리
+/// // 토시(조사)만 처리
 /// let result = modify("{철수, 이} 왔다.");
 /// assert_eq!(result, "철수가 왔다.");
 ///

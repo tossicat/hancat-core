@@ -1,13 +1,13 @@
 use hancat_core::modify;
 
 #[test]
-fn 조사_처리() {
+fn 토시_처리() {
     let result = modify("{철수, 이} 왔다.");
     assert_eq!(result, "철수가 왔다.");
 }
 
 #[test]
-fn 조사_여러개() {
+fn 토시_여러개() {
     let result = modify("{철수, 이} {밥, 을} 먹었다.");
     assert_eq!(result, "철수가 밥을 먹었다.");
 }
@@ -19,13 +19,13 @@ fn 용언_활용() {
 }
 
 #[test]
-fn 조사와_용언_통합() {
+fn 토시와_용언_통합() {
     let result = modify("{철수, 이} {밥, 을} {먹다, 었습니다}.");
     assert_eq!(result, "철수가 밥을 먹었습니다.");
 }
 
 #[test]
-fn 다로_끝나는_명사_조사처리() {
+fn 다로_끝나는_명사_토시처리() {
     let result = modify("{바다, 을} 건넜다.");
     assert_eq!(result, "바다를 건넜다.");
 }
@@ -80,7 +80,7 @@ fn 어미_미존재_e11() {
 
 #[test]
 fn 토시_미존재_e12() {
-    // 단어도 용언이 아니고 토시도 아님
+    // 단어도 용언이 아니고 토시(조사)도 아님
     let result = modify("{철수, 잘못된조사}");
     assert_eq!(result, "{E12}");
 }
@@ -93,34 +93,34 @@ fn 부분_에러_처리() {
     assert_eq!(result, "철수가 {E03} 밥을 먹었다.");
 }
 
-// === 조사 조합 테스트 ===
+// === 토시(조사) 조합 테스트 ===
 
 #[test]
-fn 조사_은는() {
+fn 토시_은는() {
     assert_eq!(modify("{철수, 은}"), "철수는");
     assert_eq!(modify("{밥, 은}"), "밥은");
 }
 
 #[test]
-fn 조사_이가() {
+fn 토시_이가() {
     assert_eq!(modify("{철수, 이}"), "철수가");
     assert_eq!(modify("{밥, 이}"), "밥이");
 }
 
 #[test]
-fn 조사_을를() {
+fn 토시_을를() {
     assert_eq!(modify("{철수, 을}"), "철수를");
     assert_eq!(modify("{밥, 을}"), "밥을");
 }
 
 #[test]
-fn 조사_과와() {
+fn 토시_과와() {
     assert_eq!(modify("{철수, 과}"), "철수와");
     assert_eq!(modify("{밥, 과}"), "밥과");
 }
 
 #[test]
-fn 조사_으로() {
+fn 토시_으로() {
     assert_eq!(modify("{집, 으로}"), "집으로");
     assert_eq!(modify("{바다, 으로}"), "바다로");
 }
