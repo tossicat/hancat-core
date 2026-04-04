@@ -92,3 +92,151 @@ fn 부분_에러_처리() {
     let result = modify("{철수, 이} {, 을} {밥, 을} 먹었다.");
     assert_eq!(result, "철수가 {E03} 밥을 먹었다.");
 }
+
+// === 조사 조합 테스트 ===
+
+#[test]
+fn 조사_은는() {
+    assert_eq!(modify("{철수, 은}"), "철수는");
+    assert_eq!(modify("{밥, 은}"), "밥은");
+}
+
+#[test]
+fn 조사_이가() {
+    assert_eq!(modify("{철수, 이}"), "철수가");
+    assert_eq!(modify("{밥, 이}"), "밥이");
+}
+
+#[test]
+fn 조사_을를() {
+    assert_eq!(modify("{철수, 을}"), "철수를");
+    assert_eq!(modify("{밥, 을}"), "밥을");
+}
+
+#[test]
+fn 조사_과와() {
+    assert_eq!(modify("{철수, 과}"), "철수와");
+    assert_eq!(modify("{밥, 과}"), "밥과");
+}
+
+#[test]
+fn 조사_으로() {
+    assert_eq!(modify("{집, 으로}"), "집으로");
+    assert_eq!(modify("{바다, 으로}"), "바다로");
+}
+
+// === 용언 활용 테스트 ===
+
+#[test]
+fn 용언_과거형() {
+    assert_eq!(modify("{먹다, 었습니다}"), "먹었습니다");
+}
+
+#[test]
+fn 용언_존칭() {
+    assert_eq!(modify("{쉬다, 세요}"), "쉬세요");
+    assert_eq!(modify("{먹다, 세요}"), "먹으세요");
+}
+
+#[test]
+fn 용언_는데() {
+    assert_eq!(modify("{먹다, 는데}"), "먹는데");
+}
+
+// === 엣지 케이스 ===
+
+#[test]
+fn 빈_문자열() {
+    assert_eq!(modify(""), "");
+}
+
+#[test]
+fn 중괄호만() {
+    assert_eq!(modify("{}"), "{E02}");
+}
+
+#[test]
+fn 패턴_연속() {
+    let result = modify("{철수, 이}{밥, 을} 먹었다.");
+    assert_eq!(result, "철수가밥을 먹었다.");
+}
+
+#[test]
+fn 패턴_없이_중괄호_닫힘만() {
+    assert_eq!(modify("abc} def"), "abc} def");
+}
+
+#[test]
+fn 공백만_있는_입력() {
+    assert_eq!(modify("   "), "   ");
+}
+
+#[test]
+fn 여러_에러_연속() {
+    let result = modify("{} {철수 이} {, 을}");
+    assert_eq!(result, "{E02} {E02} {E03}");
+}
+
+#[test]
+fn 닫는_중괄호_없음_뒤에_텍스트() {
+    let result = modify("앞 {철수, 이");
+    assert_eq!(result, "앞 {E01}");
+}
+
+#[test]
+fn 패턴_사이_텍스트_유지() {
+    let result = modify("오늘 {철수, 이} 학교에서 {밥, 을} 먹었다.");
+    assert_eq!(result, "오늘 철수가 학교에서 밥을 먹었다.");
+}
+
+// === 시나리오 테스트 ===
+
+#[test]
+fn 게임_전투_로그() {
+    let result = modify("{플레이어, 이} {몬스터, 을} {공격하다, 었습니다}.");
+    assert_eq!(result, "플레이어가 몬스터를 공격했습니다.");
+}
+
+#[test]
+fn 게임_아이템_획득() {
+    let result = modify("{플레이어, 이} {포션, 을} 획득했습니다.");
+    assert_eq!(result, "플레이어가 포션을 획득했습니다.");
+}
+
+#[test]
+fn npc_대사() {
+    let result = modify("여기서 {쉬다, 세요}. {걱정, 은} 마세요.");
+    assert_eq!(result, "여기서 쉬세요. 걱정은 마세요.");
+}
+
+#[test]
+fn 시스템_메시지() {
+    let result = modify("{사용자, 이} 방에 입장했습니다.");
+    assert_eq!(result, "사용자가 방에 입장했습니다.");
+}
+
+#[test]
+fn 긴_문장_복합_처리() {
+    let result = modify(
+        "{영희, 이} {철수, 과} 함께 {도서관, 으로} {가다, 었습니다}."
+    );
+    assert_eq!(result, "영희가 철수와 함께 도서관으로 갔습니다.");
+}
+
+#[test]
+fn 게임_퀘스트_완료() {
+    let result = modify(
+        "{용사, 이} {마왕, 을} {공격하다, 었습니다}. \
+         {왕국, 은} 다시 {평화, 을} 되찾았습니다."
+    );
+    assert_eq!(result, "용사가 마왕을 공격했습니다. 왕국은 다시 평화를 되찾았습니다.");
+}
+
+#[test]
+fn 채팅_시스템_메시지() {
+    let result = modify(
+        "{관리자, 이} {공지사항, 을} 등록했습니다. \
+         {사용자, 은} {채팅방, 으로} {돌아가다, 세요}."
+    );
+    assert_eq!(result, "관리자가 공지사항을 등록했습니다. 사용자는 채팅방으로 돌아가세요.");
+}
