@@ -50,19 +50,19 @@ assert_eq!(result, "여기서 쉬세요.");
 
 ```toml
 # 전체 기능 (기본값)
-hancat-core = "0.1"
+hancat-core = "0.8"
 
 # 토시(조사)만
-hancat-core = { version = "0.1", features = ["tossi"], default-features = false }
+hancat-core = { version = "0.8", features = ["tossi"], default-features = false }
 
 # 용언만
-hancat-core = { version = "0.1", features = ["yongeon"], default-features = false }
+hancat-core = { version = "0.8", features = ["yongeon"], default-features = false }
 
 # 용언 A등급만 (230개, 용량 최소화)
-hancat-core = { version = "0.1", features = ["grade-a"], default-features = false }
+hancat-core = { version = "0.8", features = ["grade-a"], default-features = false }
 
 # 용언 A+B등급 (863개)
-hancat-core = { version = "0.1", features = ["grade-b"], default-features = false }
+hancat-core = { version = "0.8", features = ["grade-b"], default-features = false }
 ```
 
 | Feature | 설명 | 용언 수 |
