@@ -1,7 +1,7 @@
 [package]
 name = "hancat-core"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 authors = ["TossiCat"]
 description = "tossicat-core(토시(조사))와 yongcat(용언 활용)을 통합하는 한국어 텍스트 처리 라이브러리"
 license = "MIT"
