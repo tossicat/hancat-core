@@ -4,6 +4,14 @@
 
 `{단어, 접사}` 형태의 템플릿으로 토시(조사)와 용언 활용을 자동으로 처리합니다.
 
+| 항목 | 지원 수 | 제공 |
+|------|---------|------|
+| 토시(조사) | 약 200개 | [tossicat-core](https://github.com/tossicat/tossicat-core) |
+| 용언 | 약 1,700개 | [yongcat](https://github.com/tossicat/yongcat) |
+| 어미 | 약 40개 | [yongcat](https://github.com/tossicat/yongcat) |
+
+> 용언은 사용자가 CSV로 추가할 수 있고, 용언 수는 feature flag로 조절할 수 있습니다. 정확한 지원 수는 각 프로젝트의 문서를 참고하세요.
+
 ## 사용 예
 
 ```rust
@@ -103,8 +111,8 @@ CSV 형식, 활용 유형 코드, 검증 방법 등 자세한 내용은 [yongcat
 
 ## 의존성
 
-- [tossicat-core](https://github.com/tossicat/tossicat-core) - 한국어 토시(조사) 처리 (205개 토시(조사))
-- [yongcat](https://github.com/tossicat/yongcat) - 한국어 용언 활용 (1,721개 용언, 42개 어미)
+- [tossicat-core](https://github.com/tossicat/tossicat-core) - 한국어 토시(조사) 처리
+- [yongcat](https://github.com/tossicat/yongcat) - 한국어 용언 활용
 
 ## 라이선스
 
