@@ -72,6 +72,35 @@ hancat-core = { version = "0.8", features = ["grade-b"], default-features = fals
 | `grade-a` | 용언 A등급만 | 230개 |
 | `grade-b` | 용언 A+B등급 | 863개 |
 
+## 사용자 용언 추가
+
+기본 사전에 없는 용언은 CSV 파일로 추가할 수 있습니다. yongcat의 `data/` 폴더에 CSV 파일을 작성하고 빌드하면 `modify()`에서 자동으로 사용됩니다.
+
+```csv
+base_form,dict_id,eogan,pos,conjugation,usage,grade
+쓰러뜨리다,,쓰러뜨리,동사,규,,
+부수다,,부수,동사,규,,
+```
+
+```bash
+# 검증
+cargo run --bin import
+
+# 빌드
+cargo build
+```
+
+빌드 후에는 추가한 용언이 바로 사용 가능합니다:
+
+```rust
+let result = modify("{용사, 이} {마왕, 을} {쓰러뜨리다, 었습니다}.");
+assert_eq!(result, "용사가 마왕을 쓰러뜨렸습니다.");
+```
+
+CSV 형식, 활용 유형 코드, 검증 방법 등 자세한 내용은 [yongcat USER_DATA.md](https://docs.rs/crate/yongcat/0.8.2/source/USER_DATA.md)를 참고하세요.
+
+> **참고:** 토시(조사)는 사용자가 직접 추가할 수 없습니다. 토시(조사) 추가가 필요하면 [tossicat-core 이슈](https://github.com/tossicat/tossicat-core/issues)에 요청해 주세요.
+
 ## 의존성
 
 - [tossicat-core](https://github.com/tossicat/tossicat-core) - 한국어 토시(조사) 처리 (205개 토시(조사))
