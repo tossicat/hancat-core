@@ -11,7 +11,7 @@ categories = ["text-processing", "localization"]
 
 [dependencies]
 tossicat = { version = "0.8", optional = true }
-yongcat = { git = "https://github.com/tossicat/yongcat", optional = true }
+yongcat = { version = "0.8", optional = true }
 
 [features]
 default = ["tossi", "yongeon"]
